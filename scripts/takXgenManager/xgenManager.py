@@ -1,8 +1,6 @@
 """
-Author: Sang-tak Lee
-Website: https://tak.ta-note.com
-Created: 09/11/2020
-Updated: 05/27/2021
+Author: Tak
+Contact: ta-note.com
 """
 
 from PySide2.QtWidgets import *
@@ -27,7 +25,7 @@ ICON_SIZE = 48
 
 def getMayaMainWin():
     mayaWinPtr = omui.MQtUtil.mainWindow()
-    return wrapInstance(long(mayaWinPtr), QWidget)
+    return wrapInstance(int(mayaWinPtr), QWidget)
 
 
 class XGenManager(QMainWindow):
@@ -41,13 +39,13 @@ class XGenManager(QMainWindow):
         cls.INSTANCE = XGenManager()
         cls.INSTANCE.show()
 
-    def __init__(self):
-        super(XGenManager, self).__init__()
+    def __init__(self, parent=getMayaMainWin()):
+        super(XGenManager, self).__init__(parent)
         self.de = xgg.DescriptionEditor
 
         self.setWindowTitle('XGen Manager')
-        self.setParent(getMayaMainWin())
-        self.setWindowFlags(Qt.Tool)
+        self.setWindowFlags(self.windowFlags() ^ Qt.WindowMinMaxButtonsHint)
+        self.setWindowIcon(QIcon(os.path.join(XGEN_ICON_PATH, 'takXgenManager.png')))
 
         self.buildUI()
         self.setMinimumWidth(250)
@@ -89,7 +87,7 @@ class XGenManager(QMainWindow):
         guideLayout = QGridLayout()
         guideMainLayout.addLayout(guideLayout)
 
-        numOfCVsLabel = QLabel('Number of CP')
+        numOfCVsLabel = QLabel('Number of CP :')
         guideLayout.addWidget(numOfCVsLabel, 0, 0)
 
         minusButton = QPushButton('-')
@@ -311,16 +309,3 @@ class DescriptionGroupBox(QGroupBox):
 
     def removeTitleColor(self):
         self.setStyleSheet('QGroupBox:title {color: rgb(187, 187, 187);}')
-
-    def enterEvent(self, event):
-        super(DescriptionGroupBox, self).enterEvent(event)
-
-        self.setTitleColor()
-
-    def leaveEvent(self, event):
-        super(DescriptionGroupBox, self).leaveEvent(event)
-
-        if not xgui.currentDescription() == self.title():
-            self.removeTitleColor()
-        else:
-            self.setTitleColor()
