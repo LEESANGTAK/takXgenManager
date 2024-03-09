@@ -206,6 +206,8 @@ class XGenManager(QMainWindow):
         minCPCount = 3
         for guide in guides:
             currentNumOfCPs = guide.getShape().controlPoints.numElements()
+            if currentNumOfCPs == 0:
+                currentNumOfCPs = 4
             addingValue = 1 if command == 'increase' else -1
             val = max(minCPCount, currentNumOfCPs+addingValue)
             pm.mel.eval('xgmChangeCVCount({0});'.format(val))
